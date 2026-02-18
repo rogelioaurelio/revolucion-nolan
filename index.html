@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diagrama de Nolan — Revolución Mexicana</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#111a33;
+      --ink:#e8ecff;
+      --muted:#b8c2ff;
+      --line:rgba(232,236,255,.16);
+      --line2:rgba(232,236,255,.10);
+      --shadow: 0 16px 45px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(1100px 700px at 18% 12%, rgba(122,162,255,.22), transparent 58%),
+        radial-gradient(900px 650px at 90% 25%, rgba(110,231,183,.12), transparent 60%),
+        radial-gradient(800px 600px at 55% 105%, rgba(192,132,252,.10), transparent 55%),
+        var(--bg);
+    }
+    header{max-width:1100px;margin:0 auto;padding:24px 16px 10px;}
+    .top{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;}
+    h1{margin:0;font-size:clamp(22px,3.0vw,34px);letter-spacing:.2px;}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;border:1px solid var(--line);
+      background: rgba(232,236,255,.06);color:var(--muted);font-size:13px;white-space:nowrap;
+    }
+    .tag b{color:var(--ink)}
+    .intro{
+      margin-top:12px;padding:14px;border-radius:16px;border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(17,26,51,.90), rgba(17,26,51,.65));
+      box-shadow: var(--shadow);
+    }
+    .intro p{margin:0;color:var(--muted);line-height:1.5;font-size:14px;max-width:92ch;}
+    .steps{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;border:1px solid var(--line2);
+      background: rgba(232,236,255,.05);color: rgba(232,236,255,.92);font-size:13px;
+    }
+    .num{
+      width:20px;height:20px;border-radius:999px;display:grid;place-items:center;
+      background: rgba(122,162,255,.18);border:1px solid rgba(122,162,255,.35);
+      color: var(--ink);font-weight:800;font-size:12px;
+    }
+    .sign{margin-top:10px;color:rgba(184,194,255,.85);font-size:12.5px;line-height:1.35;}
+    main{
+      max-width:1100px;margin:0 auto;padding:14px 16px 28px;
+      display:grid;grid-template-columns:1.1fr .9fr;gap:14px;
+    }
+    @media (max-width:980px){main{grid-template-columns:1fr}}
+    .card{
+      background: linear-gradient(180deg, rgba(17,26,51,.92), rgba(17,26,51,.72));
+      border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow: var(--shadow);
+    }
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    label.small{font-size:13px;color:var(--muted)}
+    input[type="text"]{
+      width:min(420px,100%);padding:10px 12px;border-radius:12px;
+      border:1px solid var(--line);background: rgba(10,15,32,.7);color:var(--ink);outline:none;
+    }
+    input[type="text"]::placeholder{color:rgba(184,194,255,.6)}
+    button{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--line);
+      background: rgba(122,162,255,.18);color:var(--ink);cursor:pointer;
+      font-weight:800;letter-spacing:.2px;
+    }
+    button:hover{background: rgba(122,162,255,.26)}
+    button.secondary{background: rgba(232,236,255,.08);font-weight:700;}
+    button.secondary:hover{background: rgba(232,236,255,.12)}
+    .hint{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.35;}
+    canvas{
+      width:100%;height:auto;border-radius:14px;border:1px solid var(--line);
+      background: rgba(10,15,32,.65);
+    }
+    .legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;font-size:13px;color:var(--muted);}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line2);background: rgba(232,236,255,.06);border-radius:999px;}
+    .dot{width:10px;height:10px;border-radius:999px;flex:0 0 auto;box-shadow:0 0 0 2px rgba(0,0,0,.25);}
+    .q{padding:10px;border:1px solid var(--line2);border-radius:14px;background: rgba(232,236,255,.05);margin-bottom:10px;}
+    .q h3{margin:0 0 8px;font-size:15px;letter-spacing:.2px;}
+    .opt{display:flex;gap:8px;align-items:flex-start;margin:6px 0;color:var(--ink);line-height:1.25;}
+    .opt input{transform: translateY(2px);}
+    .meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+    .box{padding:10px;border-radius:14px;border:1px solid var(--line2);background: rgba(232,236,255,.05);color:var(--muted);font-size:13px;line-height:1.35;}
+    .box strong{color:var(--ink)}
+    .status{margin-top:10px;padding:10px;border-radius:14px;border:1px solid var(--line);background: rgba(110,231,183,.10);color:var(--ink);line-height:1.35;}
+    .status small{color:var(--muted)}
+    details summary{cursor:pointer;color:var(--muted);user-select:none;margin-top:10px;}
+    details .inside{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.45;}
+    .footer{max-width:1100px;margin:0 auto;padding:0 16px 24px;color:rgba(184,194,255,.85);font-size:12px;line-height:1.4;}
+    code{color:rgba(232,236,255,.92)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <h1>Diagrama de Nolan — Revolución Mexicana</h1>
+      <div class="tag">🧭 <b>1914</b> · simulación ideológica</div>
+    </div>
+
+    <div class="intro">
+      <p>
+        El <b>Diagrama de Nolan</b> ubica posturas ideológicas con dos ejes: <b>libertad económica</b> (intervención del Estado en propiedad/mercado)
+        y <b>libertad personal</b> (derechos civiles, autonomía y límites al poder). Aplicado a la <b>Revolución Mexicana</b>, permite comparar proyectos
+        distintos (Huerta, Carranza, Villa, Zapata y la Convención) sin reducirlos a “izquierda-derecha”.
+      </p>
+      <div class="steps">
+        <span class="chip"><span class="num">1</span> Responde el test pensando en 1914</span>
+        <span class="chip"><span class="num">2</span> Calcula tu punto (★) en el diagrama</span>
+        <span class="chip"><span class="num">3</span> Compara y descarga tu PNG</span>
+      </div>
+      <div class="sign">
+        <b>Prof. Rogelio Aurelio Rojas Reyes</b><br/>CCH Naucalpan, UNAM
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="row" style="justify-content:space-between;">
+        <div>
+          <label class="small" for="studentName">Nombre del estudiante (aparece en la imagen)</label><br/>
+          <input id="studentName" type="text" placeholder="Ej. 4° semestre — Grupo / Nombre" />
+        </div>
+        <div class="row">
+          <button id="btnCalc">Calcular y ubicar</button>
+          <button id="btnDownload" class="secondary" disabled>Descargar PNG</button>
+        </div>
+      </div>
+
+      <p class="hint">Al calcular, aparece tu punto (★) y puedes descargar tu resultado.</p>
+
+      <canvas id="nolan" width="980" height="720"></canvas>
+      <div class="legend" id="legend"></div>
+
+      <div class="meta">
+        <div class="box"><strong>Eje X — Libertad Económica</strong><br/>Izquierda: intervención · Derecha: mercado/propiedad privada.</div>
+        <div class="box"><strong>Eje Y — Libertad Personal</strong><br/>Abajo: autoritarismo · Arriba: derechos/autonomía/culto.</div>
+      </div>
+
+      <div class="status" id="status">
+        <b>Estado:</b> Contesta el test y presiona <b>“Calcular y ubicar”</b>.<br/>
+        <small>Si te falta una respuesta, el sistema te lo dirá.</small>
+      </div>
+
+      <details>
+        <summary>Guía rápida</summary>
+        <div class="inside">
+          Totalitarismo (↓X ↓Y) · Conservadurismo (↑X ↓Y) · Progresismo (↓X ↑Y) · Liberalismo (↑X ↑Y) · Centro (≈0).
+        </div>
+      </details>
+    </section>
+
+    <aside class="card">
+      <h2 style="margin:0 0 10px;font-size:18px;">Test (simulación histórica, 1914)</h2>
+      <!-- OJO: aquí se inyectan las preguntas -->
+      <div id="quiz"></div>
+      <div class="hint">Selecciona una opción por pregunta.</div>
+    </aside>
+  </main>
+
+  <div class="footer">Ajusta la ubicación de facciones en <code>FACTIONS</code>.</div>
+
+<script>
+/* ✅ FIX IMPORTANTE:
+   Si el script se ejecuta antes de que exista #quiz (por caché/orden), no se dibuja nada.
+   Por eso, todo corre dentro de DOMContentLoaded.
+*/
+window.addEventListener("DOMContentLoaded", () => {
+
+/* =========================
+   1) Banco de preguntas
+   ========================= */
+const QUESTIONS = [
+  { id: 1, title: "1. Sobre la tenencia de la tierra:", options: [
+    { key:"A", text:"Restitución inmediata de ejidos a comunidades", x:-2, y:+1 },
+    { key:"B", text:"Respeto a la propiedad privada individual para producir", x:+2, y:-1 },
+    { key:"C", text:"Control estatal del reparto para evitar desorden", x:-2, y:-2 },
+  ]},
+  { id: 2, title: "2. Relación con la Iglesia Católica:", options: [
+    { key:"A", text:"Colaboración con el alto clero para mantener la estabilidad", x:+1, y:-2 },
+    { key:"B", text:"Libertad de culto total sin intervención del Estado", x:+2, y:+2 },
+    { key:"C", text:"El Estado debe confiscar bienes eclesiásticos y expulsar sacerdotes", x:-1, y:-2 },
+  ]},
+  { id: 3, title: "3. Propósito de la Educación:", options: [
+    { key:"A", text:"Crear escuelas rurales para la emancipación campesina", x:-1, y:+2 },
+    { key:"B", text:"Educación técnica para evitar que el proletariado crezca y se radicalice", x:0, y:-1 },
+    { key:"C", text:"Disciplina militar y valores nacionales obligatorios", x:-1, y:-2 },
+  ]},
+  { id: 4, title: "4. Estructura del Poder Ejecutivo:", options: [
+    { key:"A", text:"Un Ejecutivo fuerte que domine a los otros poderes", x:0, y:-2 },
+    { key:"B", text:"Un sistema parlamentario que pueda remover ministros", x:0, y:+2 },
+    { key:"C", text:"El Municipio Libre como base de la soberanía nacional", x:-1, y:+2 },
+  ]},
+  { id: 5, title: "5. Derechos Laborales:", options: [
+    { key:"A", text:"Sindicatos autónomos con derecho a huelga y boicot", x:-2, y:+2 },
+    { key:"B", text:"Bienestar obrero regulado por la ley y el gobierno", x:-1, y:-1 },
+    { key:"C", text:"Control estatal de festividades y prohibición de huelgas", x:-1, y:-2 },
+  ]},
+  { id: 6, title: "6. Recursos Naturales (Petróleo/Minería):", options: [
+    { key:"A", text:"Propiedad exclusiva de la nación y control estatal", x:-2, y:0 },
+    { key:"B", text:"Concesiones a privados con impuestos para el desarrollo", x:+1, y:0 },
+    { key:"C", text:"Evitar monopolios y limitar inversión extranjera", x:-1, y:+1 },
+  ]},
+  { id: 7, title: "7. El Papel del Ejército:", options: [
+    { key:"A", text:"El ejército debe controlar la educación y el servicio médico", x:-1, y:-2 },
+    { key:"B", text:"Milicias ciudadanas y colonias militares de trabajo", x:+1, y:+1 },
+    { key:"C", text:"Un ejército profesional subordinado estrictamente a la ley", x:0, y:-1 },
+  ]},
+  { id: 8, title: "8. Justicia y Ley:", options: [
+    { key:"A", text:"Justicia social revolucionaria: devolver lo robado por cualquier medio", x:-2, y:+1 },
+    { key:"B", text:"Respeto absoluto a la Constitución y procesos legales", x:+1, y:-1 },
+    { key:"C", text:"Fueros militares para que el ejército juzgue sus propios actos", x:0, y:-2 },
+  ]},
+  { id: 9, title: "9. Inversión Extranjera:", options: [
+    { key:"A", text:"Alianza estratégica con potencias para consolidar el orden", x:+2, y:-2 },
+    { key:"B", text:"Nacionalismo económico: México para los mexicanos", x:-2, y:0 },
+    { key:"C", text:"Antimonopolio: permitir inversión pero sin privilegios", x:+1, y:+1 },
+  ]},
+  { id: 10, title: "10. Lema de Lucha:", options: [
+    { key:"A", text:"“Reforma, Libertad, Justicia y Ley” (Zapata)", x:-2, y:+2 },
+    { key:"B", text:"“Constitución y Reforma” (Carranza)", x:+1, y:-1 },
+    { key:"C", text:"“Orden y Estabilidad” (Huerta)", x:0, y:-2 },
+  ]},
+];
+
+/* =========================
+   2) Facciones (referencia)
+   ========================= */
+const FACTIONS = [
+  { name:"Victoriano Huerta", short:"Huerta", color:"#fb7185", rawX:-10, rawY:-16, quadrant:"Totalitarismo" },
+  { name:"Constitucionalismo (Carranza)", short:"Carranza", color:"#fbbf24", rawX:-2, rawY:-6, quadrant:"Centro / Progresismo moderado" },
+  { name:"Villismo (Francisco Villa)", short:"Villa", color:"#7aa2ff", rawX:+8, rawY:-3, quadrant:"Centro-Derecha / Liberalismo agrario" },
+  { name:"Zapatismo (Emiliano Zapata)", short:"Zapata", color:"#6ee7b7", rawX:-14, rawY:+10, quadrant:"Progresismo radical (Socialismo agrario)" },
+  { name:"Soberana Convención", short:"Convención", color:"#c084fc", rawX:-5, rawY:+12, quadrant:"Liberalismo social / Progresismo" },
+];
+
+/* =========================
+   3) Normalización
+   ========================= */
+function computeMinMaxFromQuestions(){
+  let minX=0, maxX=0, minY=0, maxY=0;
+  for (const q of QUESTIONS){
+    const xs = q.options.map(o=>o.x);
+    const ys = q.options.map(o=>o.y);
+    minX += Math.min(...xs); maxX += Math.max(...xs);
+    minY += Math.min(...ys); maxY += Math.max(...ys);
+  }
+  return {minX, maxX, minY, maxY};
+}
+const RANGE = computeMinMaxFromQuestions();
+function norm(val, min, max){
+  if (max===min) return 0;
+  return ((val-min)/(max-min))*20 - 10;
+}
+
+/* =========================
+   4) Render Quiz (✅ aquí estaba el problema)
+   ========================= */
+const quizEl = document.getElementById("quiz");
+function renderQuiz(){
+  if (!quizEl) return;
+  quizEl.innerHTML = "";
+  for (const q of QUESTIONS){
+    const wrap = document.createElement("div");
+    wrap.className = "q";
+    wrap.innerHTML = `<h3>${q.title}</h3>`;
+    for (const opt of q.options){
+      const line = document.createElement("label");
+      line.className = "opt";
+      line.innerHTML = `
+        <input type="radio" name="q${q.id}" data-x="${opt.x}" data-y="${opt.y}" value="${opt.key}">
+        <span><b>${opt.key})</b> ${opt.text} <span style="color:rgba(184,194,255,.75)"> (X: ${opt.x}, Y: ${opt.y})</span></span>
+      `;
+      wrap.appendChild(line);
+    }
+    quizEl.appendChild(wrap);
+  }
+}
+renderQuiz();
+
+/* =========================
+   5) Canvas + dibujo
+   ========================= */
+const canvas = document.getElementById("nolan");
+const ctx = canvas.getContext("2d");
+
+function pxRatio(){ return Math.max(1, Math.floor(window.devicePixelRatio || 1)); }
+
+function diagramArea(){
+  const pad = 58;
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  return { x0:pad, y0:pad, x1:w-pad, y1:h-pad, w:w-2*pad, h:h-2*pad, cx:w/2, cy:h/2 };
+}
+function toCanvasCoords(nx, ny){
+  const a = diagramArea();
+  const x = a.x0 + ((nx+10)/20)*a.w;
+  const y = a.y1 - ((ny+10)/20)*a.h;
+  return {x,y};
+}
+
+function drawGrid(){
+  const a = diagramArea();
+  ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
+  ctx.lineWidth = 1;
+  for (let i=0;i<=20;i++){
+    const t=i/20;
+    const x=a.x0+t*a.w, y=a.y0+t*a.h;
+    ctx.strokeStyle = (i===10) ? "rgba(232,236,255,.34)" : "rgba(232,236,255,.10)";
+    ctx.beginPath(); ctx.moveTo(x,a.y0); ctx.lineTo(x,a.y1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(a.x0,y); ctx.lineTo(a.x1,y); ctx.stroke();
+  }
+  ctx.strokeStyle="rgba(232,236,255,.62)";
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(a.x0,a.cy); ctx.lineTo(a.x1,a.cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(a.cx,a.y0); ctx.lineTo(a.cx,a.y1); ctx.stroke();
+
+  ctx.fillStyle="rgba(232,236,255,.92)";
+  ctx.font="700 14px ui-sans-serif, system-ui";
+  ctx.textAlign="center";
+  ctx.fillText("Libertad Económica (X)  ←  intervención     |     mercado  →", a.cx, a.y1+34);
+
+  ctx.save();
+  ctx.translate(a.x0-36,a.cy);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText("Libertad Personal (Y)  ←  autoritarismo     |     derechos/autonomía  →", 0, 0);
+  ctx.restore();
+
+  ctx.font="800 13px ui-sans-serif, system-ui";
+  ctx.fillStyle="rgba(184,194,255,.95)";
+  ctx.textAlign="left"; ctx.fillText("Progresismo", a.x0+10, a.y0+22);
+  ctx.textAlign="right"; ctx.fillText("Liberalismo", a.x1-10, a.y0+22);
+  ctx.textAlign="left"; ctx.fillText("Totalitarismo", a.x0+10, a.y1-12);
+  ctx.textAlign="right"; ctx.fillText("Conservadurismo", a.x1-10, a.y1-12);
+
+  ctx.textAlign="center";
+  ctx.font="650 12px ui-sans-serif, system-ui";
+  ctx.fillStyle="rgba(184,194,255,.85)";
+  ctx.fillText("Centro", a.cx, a.cy-8);
+}
+
+function drawStar(cx, cy, outerRadius, points, innerScale, color){
+  const innerRadius=outerRadius*innerScale;
+  ctx.save();
+  ctx.fillStyle=color;
+  ctx.strokeStyle="rgba(0,0,0,.35)";
+  ctx.beginPath();
+  let rot=-Math.PI/2;
+  const step=Math.PI/points;
+  ctx.moveTo(cx+Math.cos(rot)*outerRadius, cy+Math.sin(rot)*outerRadius);
+  for(let i=0;i<points;i++){
+    rot+=step; ctx.lineTo(cx+Math.cos(rot)*innerRadius, cy+Math.sin(rot)*innerRadius);
+    rot+=step; ctx.lineTo(cx+Math.cos(rot)*outerRadius, cy+Math.sin(rot)*outerRadius);
+  }
+  ctx.closePath(); ctx.fill(); ctx.lineWidth=2; ctx.stroke();
+  ctx.restore();
+}
+
+function drawPoint(nx, ny, color, label, style="circle"){
+  const p=toCanvasCoords(nx,ny);
+  ctx.save(); ctx.lineWidth=2;
+  if(style==="star"){ drawStar(p.x,p.y,10,5,0.5,color); }
+  else{
+    ctx.fillStyle=color; ctx.strokeStyle="rgba(0,0,0,.35)";
+    ctx.beginPath(); ctx.arc(p.x,p.y,6.5,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  }
+  ctx.font="700 13px ui-sans-serif, system-ui";
+  ctx.fillStyle="rgba(232,236,255,.95)";
+  ctx.textAlign="left";
+  ctx.fillText(label, p.x+10, p.y-10);
+  ctx.restore();
+}
+
+function drawHeaderText(student){
+  ctx.save();
+  ctx.font="900 18px ui-sans-serif, system-ui";
+  ctx.fillStyle="rgba(232,236,255,.95)";
+  ctx.textAlign="left";
+  ctx.fillText("Diagrama de Nolan — Revolución Mexicana (1914)", 16, 26);
+  ctx.font="650 13px ui-sans-serif, system-ui";
+  ctx.fillStyle="rgba(184,194,255,.95)";
+  ctx.fillText(`Estudiante: ${student?.trim() ? student.trim() : "(sin nombre)"}`, 16, 46);
+  ctx.restore();
+}
+
+function drawFootnote(rawX, rawY, nx, ny, affinity){
+  ctx.save();
+  const h=canvas.clientHeight;
+  ctx.font="650 12px ui-sans-serif, system-ui";
+  ctx.fillStyle="rgba(184,194,255,.92)";
+  ctx.textAlign="left";
+  ctx.fillText(`Raw: X=${rawX}, Y=${rawY} | Nolan: X=${nx.toFixed(1)}, Y=${ny.toFixed(1)} | Afinidad: ${affinity}`, 16, h-16);
+  ctx.restore();
+}
+
+let lastResult=null;
+
+function computeScore(){
+  let rawX=0, rawY=0;
+  for(const q of QUESTIONS){
+    const sel=document.querySelector(`input[name="q${q.id}"]:checked`);
+    if(!sel) return null;
+    rawX += Number(sel.dataset.x);
+    rawY += Number(sel.dataset.y);
+  }
+  const nx=norm(rawX, RANGE.minX, RANGE.maxX);
+  const ny=norm(rawY, RANGE.minY, RANGE.maxY);
+  return {rawX, rawY, nx, ny};
+}
+
+function quadrantLabel(nx, ny){
+  if(nx<-1 && ny<-1) return "Totalitarismo";
+  if(nx> 1 && ny<-1) return "Conservadurismo";
+  if(nx<-1 && ny> 1) return "Progresismo";
+  if(nx> 1 && ny> 1) return "Liberalismo";
+  return "Centro";
+}
+
+function nearestFaction(nx, ny){
+  let best=null;
+  for(const f of FACTIONS){
+    const fx=norm(f.rawX, RANGE.minX, RANGE.maxX);
+    const fy=norm(f.rawY, RANGE.minY, RANGE.maxY);
+    const d=Math.hypot(nx-fx, ny-fy);
+    if(!best || d<best.d) best={...f, fx, fy, d};
+  }
+  return best;
+}
+
+function renderLegend(){
+  const legend=document.getElementById("legend");
+  legend.innerHTML="";
+  for(const f of FACTIONS){
+    const el=document.createElement("div");
+    el.className="pill";
+    el.innerHTML=`<span class="dot" style="background:${f.color}"></span>
+      <span><b>${f.short}</b> <span style="opacity:.85">(${f.quadrant})</span></span>`;
+    legend.appendChild(el);
+  }
+  const you=document.createElement("div");
+  you.className="pill";
+  you.innerHTML=`<span class="dot" style="background:#fff"></span><span><b>★ Tú</b></span>`;
+  legend.appendChild(you);
+}
+renderLegend();
+
+function drawAll(){
+  drawGrid();
+  drawHeaderText(document.getElementById("studentName").value);
+  for(const f of FACTIONS){
+    const fx=norm(f.rawX, RANGE.minX, RANGE.maxX);
+    const fy=norm(f.rawY, RANGE.minY, RANGE.maxY);
+    drawPoint(fx, fy, f.color, f.short);
+  }
+  if(lastResult){
+    drawPoint(lastResult.nx, lastResult.ny, "#ffffff", "★ Tú", "star");
+    drawFootnote(lastResult.rawX, lastResult.rawY, lastResult.nx, lastResult.ny, lastResult.affinity);
+  }
+}
+
+function resizeCanvas(){
+  const ratio=pxRatio();
+  const cssWidth=canvas.clientWidth;
+  const cssHeight=Math.round(cssWidth*(720/980));
+  canvas.style.height=cssHeight+"px";
+  canvas.width=Math.floor(cssWidth*ratio);
+  canvas.height=Math.floor(cssHeight*ratio);
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+  drawAll();
+}
+window.addEventListener("resize", resizeCanvas);
+
+const statusEl=document.getElementById("status");
+const btnCalc=document.getElementById("btnCalc");
+const btnDownload=document.getElementById("btnDownload");
+
+btnCalc.addEventListener("click", ()=>{
+  const score=computeScore();
+  if(!score){
+    statusEl.innerHTML = `<b>Falta información:</b> selecciona una opción en <b>todas</b> las preguntas.`;
+    btnDownload.disabled=true;
+    lastResult=null;
+    drawAll();
+    return;
+  }
+  const near=nearestFaction(score.nx, score.ny);
+  const quad=quadrantLabel(score.nx, score.ny);
+  lastResult = {...score, affinity:`${near.short} (cercanía) · ${quad}`};
+
+  statusEl.innerHTML = `<b>Resultado:</b> Nolan X=<b>${score.nx.toFixed(1)}</b>, Y=<b>${score.ny.toFixed(1)}</b> (raw X=${score.rawX}, Y=${score.rawY}).<br/>
+    <small><b>Más cercano a:</b> ${near.name} · <b>Cuadrante:</b> ${quad}.</small>`;
+  btnDownload.disabled=false;
+  drawAll();
+});
+
+btnDownload.addEventListener("click", ()=>{
+  if(!lastResult) return;
+  const student=document.getElementById("studentName").value.trim();
+  const safe=(student||"resultado").replace(/[^\w\s\-áéíóúÁÉÍÓÚñÑ]/g,"").trim().replace(/\s+/g,"_");
+  const link=document.createElement("a");
+  link.download=`Nolan_Revolucion_${safe||"estudiante"}.png`;
+  link.href=canvas.toDataURL("image/png");
+  link.click();
+});
+
+// init
+requestAnimationFrame(resizeCanvas);
+
+}); // DOMContentLoaded
+</script>
+</body>
+</html>
